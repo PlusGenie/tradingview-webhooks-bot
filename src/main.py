@@ -1,6 +1,9 @@
 # initialize our Flask application
 from logging import getLogger, DEBUG
 
+import os
+import logging
+import tbot
 from flask import Flask, request, jsonify, render_template, Response
 
 from commons import VERSION_NUMBER, LOG_LOCATION
@@ -10,9 +13,11 @@ from components.logs.log_event import LogEvent
 from components.schemas.trading import Order, Position
 from utils.log import get_logger
 from utils.register import register_action, register_event, register_link
+from distutils.util import strtobool
 
 # register actions, events, links
 from settings import REGISTERED_ACTIONS, REGISTERED_EVENTS, REGISTERED_LINKS
+from waitress import serve
 
 registered_actions = [register_action(action) for action in REGISTERED_ACTIONS]
 registered_events = [register_event(event) for event in REGISTERED_EVENTS]
@@ -23,13 +28,22 @@ app = Flask(__name__)
 # configure logging
 logger = get_logger(__name__)
 
-schema_list = {
-    'order': Order().as_json(),
-    'position': Position().as_json()
-}
+app.add_url_rule("/", view_func=tbot.get_main)
+app.add_url_rule("/orders", view_func=tbot.get_orders)
+app.add_url_rule("/alerts", view_func=tbot.get_alerts)
+app.add_url_rule("/ngrok", view_func=tbot.get_ngrok)
+app.add_url_rule("/errors", view_func=tbot.get_errors)
+app.add_url_rule("/tbot", view_func=tbot.get_tbot)
+app.add_url_rule("/orders/data", view_func=tbot.get_orders_data)
+app.add_url_rule("/alerts/data", view_func=tbot.get_alerts_data)
+app.add_url_rule("/errors/data", view_func=tbot.get_errors_data)
+app.add_url_rule("/tbot/data", view_func=tbot.get_tbot_data)
+app.teardown_appcontext(tbot.close_connection)
+
+schema_list = {"order": Order().as_json(), "position": Position().as_json()}
 
 
-@app.route("/", methods=["GET"])
+@app.route("/dashboard", methods=["GET"])
 def dashboard():
     if request.method == 'GET':
 
@@ -60,19 +74,32 @@ def dashboard():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    if request.method == 'POST':
-        logger.info(f'Request Data: {request.get_json()}')
+    if request.method == "POST":
+        jsondic_data = request.get_json(force=True, silent=True)
+        if not jsondic_data:
+            logger.warning(f"Invalid JSON response {jsondic_data}")
+            return Response(status=415)
+        elif not jsondic_data.get("key"):
+            logger.warning(f"Missing Key in the response {jsondic_data}")
+            return Response(status=415)
+        logger.debug(f"Request Data: {jsondic_data}")
         triggered_events = []
         for event in em.get_all():
             if event.webhook:
-                if event.key == request.get_json()['key']:
-                    event.trigger(data=request.get_json())
+                if event.key == jsondic_data["key"]:
+                    event.trigger(data=jsondic_data)
                     triggered_events.append(event.name)
 
         if not triggered_events:
-            logger.warning(f'No events triggered for webhook request {request.get_json()}')
+            logger.warning(f"No events triggered for webhook request {jsondic_data}")
         else:
-            logger.info(f'Triggered events: {triggered_events}')
+            logger.info(f"Triggered events: {triggered_events}")
+            if logger.level <= logging.INFO:
+                logger.info(f"client IP: {request.remote_addr}")
+                if request.environ.get("HTTP_X_FORWARDED_FOR") is None:
+                    logger.info(request.environ["REMOTE_ADDR"])
+                else:
+                    logger.info(request.environ["HTTP_X_FORWARDED_FOR"])
 
     return Response(status=200)
 
@@ -105,5 +132,9 @@ def activate_event():
         return {'active': event.active}
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.getenv("TVWB_HTTPS_PORT", "5000"))
+    if strtobool(os.getenv("TBOT_PRODUCTION", "False")):
+        serve(app, host="0.0.0.0", port=port)
+    else:
+        app.run(debug=True, host="0.0.0.0", port=port)

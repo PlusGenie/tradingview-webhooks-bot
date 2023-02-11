@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends "order_base.html" %}
+
+{% block content %}
+    <table id="data_order" class="table table-info table-hover">
+        <thead>
+            <th>TBOT_TIME</th>
+            <th>ORD_TIME</th>
+            <th>TICKER</th>
+            <th>TV_Close</th>
+            <th>ACTION</th>
+            <th>TYPE</th>
+            <th>QTY</th>
+            <th>ORDERID</th>
+            <th>ORDERREF</th>
+            <th>STATUS</th>
+            <th>POS</th>
+            <th>AVGF</th>
+            <th>UnrealPnL</th>
+            <th>RealPnL</th>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{row["UNIQUEKEY"]}}</td>
+                    <td>{{row["TIMESTAMP"]}}</td>
+                    <td>{{row["TICKER"]}}</td>
+                    <td>{{row["TV_PRICE"]}}</td>
+                    <td>{{row["ACTION"]}}</td>
+                    <td>{{row["ORDERTYPE"]}}</td>
+                    <td>{{row["QTY"]}}</td>
+                    <td>{{row["ORDERID"]}}</td>
+                    <td>{{row["ORDERREF"]}}</td>
+                    <td>{{row["ORDERSTATUS"]}}</td>
+                    <td>{{row["POSITION"]}}</td>
+                    <td>{{row["AVGFILLPRICE"]}}</td>
+                    <td>{{row["UnrealizedPNL"]}}</td>
+                    <td>{{row["RealizedPNL"]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

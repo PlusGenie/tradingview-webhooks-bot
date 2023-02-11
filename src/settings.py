@@ -1,9 +1,9 @@
 # actions
-REGISTERED_ACTIONS = ['PrintData']
+REGISTERED_ACTIONS = ['RedisPubAction']
 
 # events
 REGISTERED_EVENTS = ['WebhookReceived']
 
 # links
-REGISTERED_LINKS = [('PrintData', 'WebhookReceived')]
+REGISTERED_LINKS = [('RedisPubAction', 'WebhookReceived')]
 

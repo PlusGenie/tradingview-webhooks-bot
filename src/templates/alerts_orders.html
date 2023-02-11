@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% extends "alert_order_base.html" %}
+
+{% block content %}
+    <table id="data_status" class="table table-success table-hover">
+        <thead>
+            <th>TV_TIME</th>
+            <th>TBOT_TIME</th>
+            <th>ORD_TIME</th>
+            <th>TICKER</th>
+            <th>TV_$</th>
+            <th>AVG_$</th>
+            <th>DIRECTION</th>
+            <th>ACT</th>
+            <th>TYPE</th>
+            <th>QTY</th>
+            <th>POS</th>
+            <th>O_REF</th>
+            <th>STATUS</th>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{row["TV_TIMESTAMP"]}}</td>
+                    <td>{{row["UNIQUEKEY"]}}</td>
+                    <td>{{row["TIMESTAMP"]}}</td>
+                    <td>{{row["TICKER"]}}</td>
+                    <td>{{row["TV_PRICE"]}}</td>
+                    <td>{{row["AVGPRICE"]}}</td>
+                    <td>{{row["DIRECTION"]}}</td>
+                    <td>{{row["ACTION"]}}</td>
+                    <td>{{row["ORDERTYPE"]}}</td>
+                    <td>{{row["QTY"]}}</td>
+                    <td>{{row["POSITION"]}}</td>
+                    <td>{{row["ORDERREF"]}}</td>
+                    <td>{{row["ORDERSTATUS"]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

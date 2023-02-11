@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% extends "alert_base.html" %}
+
+{% block content %}
+    <table id="data_alert" class="table table-primary table-hover">
+        <thead>
+            <th class="table-primary">TV_TIME</th>
+            <th class="table-primary">TBOT_TIME</th>
+            <th class="table-primary">TICKER</th>
+            <th class="table-primary">DIRECTION</th>
+            <th class="table-primary">QTY</th>
+            <th class="table-primary">ORDERREF</th>
+            <th class="table-primary">ALERTSTAT</th>
+            <th class="table-primary">ENTLMT</th>
+            <th class="table-primary">ENTSTP</th>
+            <th class="table-primary">EXTLMT</th>
+            <th class="table-primary">EXTSTP</th>
+            <th class="table-primary">PRICE</th>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr class="table-primary">
+               <td class="table-primary">{{row["TV_TIMESTAMP"]}}</td>
+               <td class="table-primary">{{row["UNIQUEKEY"]}}</td>
+               <td class="table-primary">{{row["TICKER"]}}</td>
+               <td class="table-primary">{{row["DIRECTION"]}}</td>
+               <td class="table-primary">{{row["POSITION"]}}</td>
+               <td class="table-primary">{{row["ORDERREF"]}}</td>
+               <td class="table-primary">{{row["ALERTSTATUS"]}}</td>
+               <td class="table-primary">{{row["ENTRYLIMIT"]}}</td>
+               <td class="table-primary">{{row["ENTRYSTOP"]}}</td>
+               <td class="table-primary">{{row["EXITLIMIT"]}}</td>
+               <td class="table-primary">{{row["EXITSTOP"]}}</td>
+               <td class="table-primary">{{row["PRICE"]}}</td>
+            </tr>
+         {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

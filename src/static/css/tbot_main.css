@@ -1,0 +1,19 @@
+.card {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  .card button {
+    z-index: 1;
+  }
+
+.card.disabled,
+.card[disabled] {
+pointer-events: none;
+opacity: .8;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 10vw;
+    object-fit: cover;
+}

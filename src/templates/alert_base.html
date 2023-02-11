@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+  </head>
+  <body>
+    <ul class="nav nav-pills container">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Alerts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/orders">Orders</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/tbot">Tbot</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/errors">Errors</a>
+      </li>
+    </ul>
+
+    <div class="container">
+      <h1 class="display-5">{{ title }}</h1>
+      <hr>
+      {% block content %}{% endblock %}
+    </div>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+    {% block scripts %}
+    <script>
+        $(document).ready(function () {
+          $('#data_alert').DataTable({
+            scrollX: true,
+            order: [[ 0, 'desc' ]],
+            ajax: '/alerts/data',
+            processing: true,
+            language: { "processing": '<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"> <span class="visually-hidden">Loading...</span></div><div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div>'
+            },
+            columns: [
+              {data: 'TV_TIMESTAMP'},
+              {data: 'UNIQUEKEY'},
+              {data: 'TICKER'},
+              {
+                data: 'DIRECTION',
+                render: function (data, type) {
+                  if (type === 'display') {
+                      let color = 'orange';
+                      switch (data) {
+                          case 'strategy.closelong':
+                              color = 'red';
+                              break;
+                          case 'strategy.closeshort':
+                              color = 'red';
+                              break;
+                          case 'strategy.entrylong':
+                              color = 'green';
+                              break;
+                          case 'strategy.entryshort':
+                              color = 'green';
+                              break;
+                          case 'strategy.exitlong':
+                              color = 'blue';
+                              break;
+                          case 'strategy.exitshort':
+                              color = 'blue';
+                              break;
+                      }
+                      return '<span style="color:' + color + '">' + data + '</span>';
+                    }
+                  return data;
+                },
+              },
+              {data: 'POSITION'},
+              {data: 'ORDERREF'},
+              {data: 'ALERTSTATUS'},
+              {data: 'ENTRYLIMIT'},
+              {data: 'ENTRYSTOP'},
+              {data: 'EXITLIMIT'},
+              {data: 'EXITSTOP'},
+              {data: 'PRICE'},
+            ],
+          });
+        });
+    </script>
+    {% endblock %}
+  </body>
+</html>
