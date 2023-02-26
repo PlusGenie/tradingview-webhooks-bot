@@ -14,7 +14,7 @@ logger.remove()
 logger.add(sys.stderr, level=os.environ.get("TBOT_LOGLEVEL", "INFO"))
 
 
-class RedisPubAction(Action):
+class RedisPubActionClient3(Action):
     """Class for handling Redis connections for message delivery.
 
     This class sets up a Redis connection either as a stream or as a
@@ -28,7 +28,7 @@ class RedisPubAction(Action):
     def __init__(self):
         super().__init__()
         self.redis_connection = None
-        self.client_id = os.getenv("TBOT_IBKR_CLIENTID", "1")
+        self.client_id = str(3)
         self.is_redis_stream = strtobool(
             os.getenv("TBOT_USES_REDIS_STREAM", "1"))
         if self.is_redis_stream:
@@ -80,6 +80,9 @@ class RedisPubAction(Action):
         """Add data to the stream"""
         data_dict = self.validate_broker_data()
         if data_dict:
+            client_id = data_dict.get("clientId", -1)
+            if client_id != int(self.client_id):
+                return
             # Create a bespoken dictionary for Redis Stream
             stream_dict = {self.redis_stream_tb_key: json.dumps(data_dict)}
             self.redis_connection.xadd(self.redis_stream_key, stream_dict)
@@ -92,6 +95,9 @@ class RedisPubAction(Action):
         data_dict = self.validate_broker_data()
         # Publishing data
         if data_dict:
+            client_id = data_dict.get("clientId", -1)
+            if client_id != int(self.client_id):
+                return
             json_string = json.dumps(data_dict)
             self.redis_connection.publish(self.redis_channel, json_string)
             logger.success(
