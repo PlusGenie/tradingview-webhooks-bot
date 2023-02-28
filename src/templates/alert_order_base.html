@@ -53,7 +53,7 @@
               data: 'AVGPRICE',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
-                    .number(',', '.', 2, '')
+                    .number('', '.', 2, '')
                     .display(data);
                 if (type === 'display') {
                     let color = 'green';

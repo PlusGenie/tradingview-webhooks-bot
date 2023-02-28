@@ -70,12 +70,24 @@
             {data: 'ORDERID'},
             {data: 'ORDERREF'},
             {data: 'ORDERSTATUS'},
-            {data: 'POSITION'},
+            {
+              data: 'POSITION',
+              render: function (data, type) {
+                if (type === 'display') {
+                    let color = 'red';
+                    if (data >= 0) {
+                      color = 'black';
+                    }
+                    return '<span style="color:' + color + '">' + data + '</span>';
+                }
+                return data;
+              },
+            },
             {
               data: 'AVGFILLPRICE',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
-                    .number(',', '.', 2, '')
+                    .number('', '.', 2, '')
                     .display(data);
                 if (type === 'display') {
                     let color = 'green';
@@ -91,7 +103,7 @@
               data: 'UnrealizedPNL',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
-                    .number(',', '.', 2, '')
+                    .number('', '.', 2, '')
                     .display(data);
                 if (type === 'display' || type === 'filter') {
                     let color = 'red';
@@ -109,7 +121,7 @@
               data: 'RealizedPNL',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
-                    .number(',', '.', 2, '')
+                    .number('', '.', 2, '')
                     .display(data);
                 if (type === 'display') {
                     let color = 'red';
