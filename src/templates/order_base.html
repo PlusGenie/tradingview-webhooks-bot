@@ -42,13 +42,12 @@
           language: { "processing": '<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"> <span class="visually-hidden">Loading...</span></div><div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div>'
           },
           columns: [
-            {data: 'UNIQUEKEY'},
-            {data: 'TIMESTAMP'},
-            {data: 'TICKER'},
-            {data: 'TV_PRICE'},
+            {data: 'uniquekey'},
+            {data: 'timestamp'},
+            {data: 'ticker'},
+            {data: 'tv_price'},
             {
-              title: 'ACT',
-              data: 'ACTION',
+              data: 'action',
               render: function (data, type) {
                 if (type === 'display') {
                     let color = 'orange';
@@ -65,13 +64,15 @@
                 return data;
               },
             },
-            {data: 'ORDERTYPE'},
-            {data: 'QTY'},
-            {data: 'ORDERID'},
-            {data: 'ORDERREF'},
-            {data: 'ORDERSTATUS'},
+            {data: 'ordertype'},
+            {data: 'qty'},
+            {data: 'lmtprice'},
+            {data: 'auxprice'},
+            {data: 'orderid'},
+            {data: 'orderref'},
+            {data: 'orderstatus'},
             {
-              data: 'POSITION',
+              data: 'position',
               render: function (data, type) {
                 if (type === 'display') {
                     let color = 'red';
@@ -84,7 +85,7 @@
               },
             },
             {
-              data: 'AVGFILLPRICE',
+              data: 'avgfillprice',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
                     .number('', '.', 2, '')
@@ -100,7 +101,7 @@
               },
             },
             {
-              data: 'UnrealizedPNL',
+              data: 'unrealizedpnl',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
                     .number('', '.', 2, '')
@@ -118,7 +119,7 @@
               },
             },
             {
-              data: 'RealizedPNL',
+              data: 'realizedpnl',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
                     .number('', '.', 2, '')

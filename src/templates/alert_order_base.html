@@ -44,13 +44,13 @@
           language: { "processing": '<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"> <span class="visually-hidden">Loading...</span></div><div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div>'
           },
           columns: [
-            {data: 'TV_TIMESTAMP'},
-            {data: 'UNIQUEKEY'},
-            {data: 'TIMESTAMP'},
-            {data: 'TICKER'},
-            {data: 'TV_PRICE'},
+            {data: 'tv_timestamp'},
+            {data: 'uniquekey'},
+            {data: 'timestamp'},
+            {data: 'ticker'},
+            {data: 'tv_price'},
             {
-              data: 'AVGPRICE',
+              data: 'avgprice',
               render: function (data, type) {
                 var number = $.fn.dataTable.render
                     .number('', '.', 2, '')
@@ -65,9 +65,9 @@
                 return number;
               },
             },
-            {data: 'DIRECTION'},
+            {data: 'direction'},
             {
-              data: 'ACTION',
+              data: 'action',
               render: function (data, type) {
                 if (type === 'display') {
                     let color = 'orange';
@@ -84,12 +84,12 @@
                 return data;
               },
             },
-            {data: 'ORDERTYPE'},
-            {data: 'QTY'},
-            {data: 'POSITION'},
-            {data: 'ORDERREF'},
+            {data: 'ordertype'},
+            {data: 'qty'},
+            {data: 'position'},
+            {data: 'orderref'},
             {
-              data: 'ORDERSTATUS',
+              data: 'orderstatus',
               render: function (data, type) {
                 if (type === 'display') {
                     let color = 'black';
